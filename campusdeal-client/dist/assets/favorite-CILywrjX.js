@@ -1,0 +1,1 @@
+import{s as r}from"./index-BJm52uJz.js";const o={getFavorites(){return r.get("/favorites")},addFavorite(e){return r.post("/favorites",{productId:e})},removeFavorite(e){return r.delete(`/favorites/${e}`)},checkFavorite(e){return r.get(`/favorites/check/${e}`)}};export{o as f};
