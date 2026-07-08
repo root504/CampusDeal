@@ -1,0 +1,52 @@
+server:
+  port: 8080
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: campusdeal-server
+
+  # MySQL 数据库 (Aiven)
+  datasource:
+    url: jdbc:mysql://mysql-db-project-bd4c.j.aivencloud.com:20039/defaultdb?useUnicode=true&characterEncoding=utf-8&useSSL=true&requireSSL=true&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&trustServerCertificate=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${AIVEN_USERNAME:avnadmin}
+    password: ${AIVEN_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: never
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+# JWT 配置
+jwt:
+  secret: Y2FtcHVzLWRlYWwtand0LXNlY3JldC1rZXktZm9yLWRldmVsb3BtZW50LWVudmlyb25tZW50
+  access-token-expiration: 7200000
+  refresh-token-expiration: 604800000
+
+# Cloudflare R2 配置
+r2:
+  endpoint: ${R2_ENDPOINT}
+  access-key: ${R2_ACCESS_KEY}
+  secret-key: ${R2_SECRET_KEY}
+  bucket: campus-deal
+  public-url: ${R2_PUBLIC_URL}
+
+# 日志
+logging:
+  level:
+    com.campusdeal: DEBUG
+    org.springframework.security: DEBUG

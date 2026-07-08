@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: campusdeal
+    env: docker
+    plan: free
+    healthCheckPath: /api/products?page=0&size=1
+    envVars:
+      - key: AIVEN_USERNAME
+        sync: false
+      - key: AIVEN_PASSWORD
+        sync: false
+      - key: R2_ENDPOINT
+        sync: false
+      - key: R2_ACCESS_KEY
+        sync: false
+      - key: R2_SECRET_KEY
+        sync: false
+      - key: R2_PUBLIC_URL
+        sync: false
+      - key: JAVA_OPTS
+        value: "-Xmx256m -Xms128m"

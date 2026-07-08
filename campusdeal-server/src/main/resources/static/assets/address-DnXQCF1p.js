@@ -1,0 +1,1 @@
+import{s}from"./index-CsjzOb48.js";const d={getList(){return s.get("/addresses")},getDetail(e){return s.get(`/addresses/${e}`)},create(e){return s.post("/addresses",e)},update(e,t){return s.put(`/addresses/${e}`,t)},delete(e){return s.delete(`/addresses/${e}`)},setDefault(e){return s.put(`/addresses/${e}/default`)}};export{d as a};

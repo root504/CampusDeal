@@ -1,0 +1,1 @@
+import{s as r}from"./index-CsjzOb48.js";const s={updateProfile(e){return r.put("/user/profile",e)},changePassword(e){return r.put("/user/password",e)},changePhone(e){return r.put("/user/phone",e)},deactivate(e){return r.put("/user/deactivate",{password:e})},getUserInfo(e){return r.get(`/user/${e}`)},getUserStats(){return r.get("/user/stats")}};export{s as u};
