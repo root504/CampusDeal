@@ -12,24 +12,29 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
 @Service
 public class R2Service {
     private static final Logger log = LoggerFactory.getLogger(R2Service.class);
 
     private final S3Client s3Client;
+    private final S3Presigner s3Presigner;
 
     @Value("${r2.bucket}")
     private String bucket;
 
-    @Value("${r2.public-url}")
+    @Value("${r2.public-url:}")
     private String publicUrl;
 
-    public R2Service(S3Client s3Client) {
+    public R2Service(S3Client s3Client, S3Presigner s3Presigner) {
         this.s3Client = s3Client;
+        this.s3Presigner = s3Presigner;
     }
 
     public String uploadFile(MultipartFile file, String folder) {
@@ -55,7 +60,15 @@ public class R2Service {
                     RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
             log.info("文件上传成功: {}", fileKey);
-            return publicUrl + "/" + fileKey;
+            if (publicUrl != null && !publicUrl.isEmpty()) {
+                return publicUrl + "/" + fileKey;
+            }
+            // 无 publicUrl 时生成预签名 URL（7天有效）
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofDays(7))
+                    .getObjectRequest(r -> r.bucket(bucket).key(fileKey))
+                    .build();
+            return s3Presigner.presignGetObject(presignRequest).url().toString();
         } catch (IOException e) {
             log.error("文件上传失败", e);
             throw new BusinessException("文件上传失败: " + e.getMessage());
